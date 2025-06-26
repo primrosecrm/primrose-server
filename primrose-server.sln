@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "primrose-server", "primrose-server.csproj", "{75688467-2CB5-0715-6F33-726447FAE052}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Primrose.API/primrose-server", "Primrose.API/primrose-server.csproj", "{75688467-2CB5-0715-6F33-726447FAE052}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

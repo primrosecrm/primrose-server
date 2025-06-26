@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Primrose.API.Models.Authentication;
 using Primrose.API.Models.Login;
 using Primrose.API.Services.Authentication;
 
@@ -9,21 +8,24 @@ namespace Primrose.API.Controllers;
 [Route("[controller]")]
 public class AuthenticationController : ControllerBase
 {
-    private readonly IAuthenticationService<UserCredential, UserAuthenticationResult> _authenticationService;
+    private readonly AuthenticationService _authService;
 
-    public AuthenticationController(IAuthenticationService<UserCredential, UserAuthenticationResult> authenticationService)
+    public AuthenticationController(AuthenticationService authService)
     {
-        _authenticationService = authenticationService;
+        _authService = authService;
     }
 
     [HttpPost("Login")]
-    public ActionResult Login(LoginRequest request)
+    public async Task<ActionResult<LoginResponse>> Login(LoginRequest request)
     {
-        var userCredentials = new UserCredential(request.Username, request.Password);
-        var result = _authenticationService.Authenticate(userCredentials);
+        var result = await _authService.LoginUser(request.Email, request.Password);
+        return Ok(new LoginResponse(result));
+    }
 
-        var response = new LoginResponse(result);
-
-        return Ok(response);
+    [HttpPost("Register")]
+    public async Task<ActionResult<RegisterResponse>> Register(RegisterRequest request)
+    {
+        var result = await _authService.RegisterUser(request.Email, request.Name, request.Password);
+        return Ok(new RegisterResponse(result));
     }
 }
