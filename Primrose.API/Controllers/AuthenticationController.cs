@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Primrose.API.Models.Login;
+using Primrose.API.Entities.Login;
 using Primrose.API.Services.Authentication;
 
 namespace Primrose.API.Controllers;

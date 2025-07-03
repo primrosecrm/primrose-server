@@ -1,23 +1,22 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using Supabase.Postgrest.Attributes;
+using Supabase.Postgrest.Models;
 
 namespace Primrose.API.Models.Authentication;
 
 [Table("users")]
-public sealed class User
+public sealed class User : BaseModel
 {
-    [Key]
     [Column("user_id")]
     public Guid UserId { get; set; } = Guid.NewGuid();
 
     [Column("email")]
-    public required string Email { get; set; }
+    public string Email { get; set; }
 
     [Column("name")]
-    public required string Name { get; set; }
+    public string Name { get; set; }
 
     [Column("password_hash")]
-    public required string PasswordHash { get; set; }
+    public string PasswordHash { get; set; }
 
     [Column("is_active")]
     public bool IsActive { get; set; } = true;

@@ -1,8 +1,4 @@
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
-
-namespace Primrose.API.Models;
+namespace Primrose.API.Entities;
 
 // This class represents the result of a HTTP API operation.
 // Success is set on whether an unexpected error has occurred.

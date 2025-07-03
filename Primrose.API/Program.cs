@@ -1,22 +1,38 @@
-using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
-using Microsoft.EntityFrameworkCore;
-using Primrose.API.Context;
 using Primrose.API.Repositories;
 using Primrose.API.Services.Authentication;
+using Supabase;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(5140);
+});
+
+
 builder.Services.AddControllers();
 
-builder.Services.AddScoped<AuthenticationService, AuthenticationService>();
-builder.Services.AddScoped<UserRepository, UserRepository>();
+// register repositories
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+// register services
 builder.Services.AddScoped<IHashService, BCryptHashService>();
+builder.Services.AddScoped<AuthenticationService, AuthenticationService>();
 
 DotNetEnv.Env.Load();
 
-var connStr = Environment.GetEnvironmentVariable("POSTGRES_CONNECTION");
-builder.Services.AddDbContext<PrimroseContext>(
-    options => options.UseNpgsql(connStr)
-);
+// setup supabase
+var url = Environment.GetEnvironmentVariable("SUPABASE_URL") ?? throw new Exception("SUPABASE_URL was null");
+var key = Environment.GetEnvironmentVariable("SUPABASE_KEY") ?? throw new Exception("SUPABASE_KEY was null");
+
+var options = new SupabaseOptions
+{
+    AutoRefreshToken = true,
+    AutoConnectRealtime = true,
+};
+
+builder.Services.AddSingleton(provider => new Client(url, key, options));
+
 
 var app = builder.Build();
 

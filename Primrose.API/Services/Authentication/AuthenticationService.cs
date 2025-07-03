@@ -4,10 +4,10 @@ namespace Primrose.API.Services.Authentication;
 
 public class AuthenticationService
 {
-    private readonly UserRepository _userRepository;
+    private readonly IUserRepository _userRepository;
     private readonly IHashService _hashService;
 
-    public AuthenticationService(UserRepository userRepository, IHashService hashService)
+    public AuthenticationService(IUserRepository userRepository, IHashService hashService)
     {
         _userRepository = userRepository;
         _hashService = hashService;

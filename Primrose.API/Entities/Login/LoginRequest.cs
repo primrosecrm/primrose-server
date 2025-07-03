@@ -1,4 +1,4 @@
-namespace Primrose.API.Models.Login;
+namespace Primrose.API.Entities.Login;
 
 public sealed class LoginRequest
 {
