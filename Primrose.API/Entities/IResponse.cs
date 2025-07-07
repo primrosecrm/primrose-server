@@ -1,3 +1,5 @@
+using Primrose.API.Validators.Services;
+
 namespace Primrose.API.Entities;
 
 // This class represents the result of a HTTP API operation.
@@ -5,5 +7,5 @@ namespace Primrose.API.Entities;
 public abstract class ApiResponse
 {
     public bool Success { get; set; } = true;
-    public string? Error { get; set; } = null;
+    public ApiValidationResult? Result { get; set; }
 }

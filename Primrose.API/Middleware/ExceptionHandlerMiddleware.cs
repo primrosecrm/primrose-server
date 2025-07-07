@@ -1,11 +1,14 @@
 using System.Net;
 using System.Text.Json;
 
-public class ExceptionHandlerMiddleware
+namespace Primrose.API.Middleware;
+
+
+public class ExceptionHandlingMiddleware
 {
     private readonly RequestDelegate _next;
 
-    public ExceptionHandlerMiddleware(RequestDelegate next)
+    public ExceptionHandlingMiddleware(RequestDelegate next)
     {
         _next = next;
     }
@@ -22,13 +25,20 @@ public class ExceptionHandlerMiddleware
 
             var response = new
             {
-                Success = false,
-                Message = "An unexpected error occurred.",
-                Exception = ex.Message,
-                InnerException = ex.InnerException?.Message
+                success = false,
+                message = "An unexpected error occurred.",
+                exception = ex.Message,
+                innerException = ex.InnerException?.Message
             };
 
-            var jsonResponse = JsonSerializer.Serialize(response);
+            var jsonResponse = JsonSerializer.Serialize(
+                response,
+                new JsonSerializerOptions()
+                { 
+                    WriteIndented = true
+                }
+            );
+
             await context.Response.WriteAsync(jsonResponse);
         }
     }
