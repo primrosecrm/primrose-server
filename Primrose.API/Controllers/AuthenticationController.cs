@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Primrose.API.Entities.Login;
 using Primrose.API.Services.Authentication;
 using Primrose.API.Validators.Services;
@@ -7,36 +8,34 @@ namespace Primrose.API.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class AuthenticationController : ControllerBase
+public class AuthenticationController
+    : PrimroseApiController
 {
     private readonly AuthenticationService _authService;
-    private readonly IValidatorService _validator;
 
     public AuthenticationController(AuthenticationService authService, IValidatorService validator)
+        : base(validator)
     {
         _authService = authService;
-        _validator = validator;
     }
 
-    [HttpPost]
-    [Route(nameof(Login))]
-    public async Task<ActionResult<LoginResponse>> Login(LoginRequest request)
+    [HttpPost(nameof(Login))]
+    public async Task<IActionResult> Login(LoginRequest request)
     {
         var validation = _validator.Validate(request);
-        if (!validation.IsValid) return BadRequest(new LoginResponse(false, validation));
+        if (!validation.IsValid) return LoginResponse.Bad(validation);
 
-        var result = await _authService.LoginUser(request.Email, request.Password);
-        return Ok(new LoginResponse(result));
+        var result = await _authService.LoginUser(request);
+        return LoginResponse.Ok(result);
     }
 
-    [HttpPost]
-    [Route(nameof(Register))]
-    public async Task<ActionResult<RegisterResponse>> Register(RegisterRequest request)
+    [HttpPost(nameof(Register))]
+    public async Task<IActionResult> Register(RegisterRequest request)
     {
         var validation = _validator.Validate(request);
-        if (!validation.IsValid) return BadRequest(new LoginResponse(false, validation));
+        if (!validation.IsValid) return RegisterResponse.Bad(validation);
 
-        var result = await _authService.RegisterUser(request.Email, request.Name, request.Password);
-        return Ok(new RegisterResponse(result));
+        var result = await _authService.RegisterUser(request);
+        return RegisterResponse.Ok(result);
     }
 }

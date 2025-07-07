@@ -1,3 +1,4 @@
+using Primrose.API.Entities.Login;
 using Primrose.API.Repositories;
 
 namespace Primrose.API.Services.Authentication;
@@ -13,20 +14,20 @@ public class AuthenticationService
         _hashService = hashService;
     }
 
-    public async Task<bool> LoginUser(string email, string password)
+    public async Task<bool> LoginUser(LoginRequest request)
     {
-        var user = await _userRepository.GetUser(email);
+        var user = await _userRepository.GetUser(request.Email);
         if (user is null) return false;
 
-        var isVerified = _hashService.VerifyHash(password, user.PasswordHash);
+        var isVerified = _hashService.VerifyHash(request.Password, user.PasswordHash);
         return isVerified;
     }
 
-    public async Task<bool> RegisterUser(string email, string name, string password)
+    public async Task<bool> RegisterUser(RegisterRequest request)
     {
-        var passwordHash = _hashService.HashString(password);
+        var passwordHash = _hashService.HashString(request.Password);
 
-        var isCreated = await _userRepository.CreateUser(email, name, passwordHash);
+        var isCreated = await _userRepository.CreateUser(request.Email, request.Name, passwordHash);
         return isCreated;
     }
 }

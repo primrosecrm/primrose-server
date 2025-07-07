@@ -8,10 +8,16 @@ public class ExceptionHandlingMiddleware
 {
     private readonly RequestDelegate _next;
 
+    private static readonly JsonSerializerOptions SerializerWriteOptions = new()
+    {
+        WriteIndented = true
+    };
+
     public ExceptionHandlingMiddleware(RequestDelegate next)
     {
         _next = next;
     }
+
 
     public async Task InvokeAsync(HttpContext context)
     {
@@ -31,14 +37,7 @@ public class ExceptionHandlingMiddleware
                 innerException = ex.InnerException?.Message
             };
 
-            var jsonResponse = JsonSerializer.Serialize(
-                response,
-                new JsonSerializerOptions()
-                { 
-                    WriteIndented = true
-                }
-            );
-
+            var jsonResponse = JsonSerializer.Serialize(response, SerializerWriteOptions);
             await context.Response.WriteAsync(jsonResponse);
         }
     }

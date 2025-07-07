@@ -14,14 +14,18 @@ public class FluentValidatorService : IValidatorService
     }
 
     public ApiValidationResult Validate<T>(T request)
+        where T : class
     {
         var fluentValidation = _provider.GetRequiredService<IValidator<T>>();
         var fluentValidationResult = fluentValidation.Validate(request);
 
         var result = new ApiValidationResult();
 
-        foreach (var e in fluentValidationResult.Errors)
-            result.Errors.Add(new ApiValidationError(e.PropertyName, e.ErrorMessage));
+        foreach (var error in fluentValidationResult.Errors)
+        {
+            var validationError = new ApiValidationError(error.PropertyName, error.ErrorMessage);
+            result.Errors.Add(validationError);
+        }
 
         return result;
     }
