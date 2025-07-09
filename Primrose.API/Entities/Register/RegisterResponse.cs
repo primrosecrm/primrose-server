@@ -25,7 +25,7 @@ public sealed class RegisterResponse
         var response = new RegisterResponse
         {
             CreatedSuccessfully = false,
-            Result = result
+            ErrorResult = result
         };
 
         return new BadRequestObjectResult(response);

@@ -15,7 +15,10 @@ builder.WebHost.ConfigureKestrel(options =>
     options.ListenAnyIP(5140);
 });
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ValidationFilter>();
+});
 
 // validator service
 builder.Services.AddScoped<IValidatorService, FluentValidatorService>();

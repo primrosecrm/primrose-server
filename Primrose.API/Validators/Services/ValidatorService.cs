@@ -1,5 +1,6 @@
 
 using FluentValidation;
+using Microsoft.AspNetCore.Identity.Data;
 
 namespace Primrose.API.Validators.Services;
 
@@ -16,8 +17,12 @@ public class FluentValidatorService : IValidatorService
     public ApiValidationResult Validate<T>(T request)
         where T : class
     {
-        var fluentValidation = _provider.GetRequiredService<IValidator<T>>();
-        var fluentValidationResult = fluentValidation.Validate(request);
+        var validatorType = typeof(IValidator<>).MakeGenericType(request.GetType());
+        var validator = _provider.GetService(validatorType) as IValidator;
+
+        // var fluentValidation = _provider.GetRequiredService<IValidator<T>>();
+        var context = new ValidationContext<object>(request);
+        var fluentValidationResult = validator.Validate(context);
 
         var result = new ApiValidationResult();
 

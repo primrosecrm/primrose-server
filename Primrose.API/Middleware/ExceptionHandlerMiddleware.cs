@@ -1,5 +1,7 @@
 using System.Net;
 using System.Text.Json;
+using Primrose.API.Entities;
+using Primrose.API.Validators.Services;
 
 namespace Primrose.API.Middleware;
 
@@ -29,15 +31,20 @@ public class ExceptionHandlingMiddleware
         {
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-            var response = new
+            var apiResponse = new ApiResponse
             {
-                success = false,
-                message = "An unexpected error occurred.",
-                exception = ex.Message,
-                innerException = ex.InnerException?.Message
+                Success = false,
+                ErrorResult = new()
+                { 
+                    Errors = [
+                        new ApiValidationError("Oops", "An unexpected error occurred."),
+                        new ApiValidationError("Exception", ex.Message),
+                        new ApiValidationError("Inner Exception", ex.InnerException?.Message ?? "")
+                    ]
+                }
             };
 
-            var jsonResponse = JsonSerializer.Serialize(response, SerializerWriteOptions);
+            var jsonResponse = JsonSerializer.Serialize(apiResponse, SerializerWriteOptions);
             await context.Response.WriteAsync(jsonResponse);
         }
     }

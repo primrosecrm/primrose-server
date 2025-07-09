@@ -28,7 +28,7 @@ public sealed class LoginResponse
         var response = new LoginResponse
         {
             IsAuthenticated = false,
-            Result = result
+            ErrorResult = result
         };
 
         return new BadRequestObjectResult(response);

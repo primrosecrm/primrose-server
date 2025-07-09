@@ -6,5 +6,5 @@ public sealed record ApiValidationError(string Property, string Message);
 public sealed class ApiValidationResult
 {
     public bool IsValid => Errors.Count is 0;
-    public List<ApiValidationError> Errors { get; } = [];
+    public List<ApiValidationError> Errors { get; set; } = [];
 }
