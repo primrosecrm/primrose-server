@@ -1,5 +1,3 @@
-
-using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Primrose.API.Validators.Services;
 
@@ -13,7 +11,7 @@ public sealed class LoginResponse
 
     public required bool IsAuthenticated { get; set; }
 
-    public static IActionResult Ok(bool isAuthenticated)
+    public static OkObjectResult Ok(bool isAuthenticated)
     {
         var response = new LoginResponse
         {
@@ -23,7 +21,7 @@ public sealed class LoginResponse
         return new OkObjectResult(response);
     }
 
-    public static IActionResult Bad(ApiValidationResult? result = null)
+    public static BadRequestObjectResult Bad(ApiValidationResult? result = null)
     {
         var response = new LoginResponse
         {

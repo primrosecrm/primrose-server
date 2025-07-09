@@ -5,7 +5,6 @@ using Primrose.API.Validators.Services;
 
 namespace Primrose.API.Middleware;
 
-
 public class ExceptionHandlingMiddleware
 {
     private readonly RequestDelegate _next;

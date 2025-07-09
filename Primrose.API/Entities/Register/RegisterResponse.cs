@@ -10,7 +10,7 @@ public sealed class RegisterResponse
 
     public required bool CreatedSuccessfully { get; set; } = false;
 
-    public static IActionResult Ok(bool createdSuccessfully)
+    public static OkObjectResult Ok(bool createdSuccessfully)
     {
         var response = new RegisterResponse
         {
@@ -20,7 +20,7 @@ public sealed class RegisterResponse
         return new OkObjectResult(response);
     }
 
-    public static IActionResult Bad(ApiValidationResult? result = null)
+    public static BadRequestObjectResult Bad(ApiValidationResult? result = null)
     {
         var response = new RegisterResponse
         {

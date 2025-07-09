@@ -15,6 +15,18 @@ builder.WebHost.ConfigureKestrel(options =>
     options.ListenAnyIP(5140);
 });
 
+const string LocalHostCorsPolicy = "AllowLocalHost";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(LocalHostCorsPolicy, builder =>
+    {
+        builder.WithOrigins("http://localhost:6969")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<ValidationFilter>();
@@ -50,6 +62,8 @@ var options = new SupabaseOptions
 builder.Services.AddSingleton(provider => new Client(url, key, options));
 
 var app = builder.Build();
+
+app.UseCors(LocalHostCorsPolicy);
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
