@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Primrose.API.Entities.Login;
-using Primrose.API.Services.Authentication;
+using Primrose.API.Entities.Register;
 using Primrose.API.Validators.Services;
 
 namespace Primrose.API.Controllers;
@@ -10,9 +10,9 @@ namespace Primrose.API.Controllers;
 public class AuthenticationController
     : PrimroseApiController
 {
-    private readonly AuthenticationService _authService;
+    private readonly IAuthenticationService _authService;
 
-    public AuthenticationController(AuthenticationService authService, IValidatorService validator)
+    public AuthenticationController(IAuthenticationService authService, IValidatorService validator)
         : base(validator)
     {
         _authService = authService;

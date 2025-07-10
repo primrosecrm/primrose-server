@@ -1,5 +1,5 @@
 using FluentValidation;
-using Primrose.API.Entities.Login;
+using Primrose.API.Entities.Register;
 using Primrose.API.Validators;
 
 namespace Primrose.API.Services.Validators.Authentication;
