@@ -6,7 +6,7 @@ namespace Primrose.API.Models.Authentication;
 [Table("users")]
 public sealed class User : BaseModel
 {
-    [Column("user_id")]
+    [PrimaryKey("user_id", false)]
     public Guid UserId { get; set; } = Guid.NewGuid();
 
     [Column("email")]

@@ -8,9 +8,9 @@ using FluentValidation;
 using Primrose.API.Validators.Services;
 using Primrose.API.Services.Validators.Authentication;
 using Primrose.API.Validators;
-using Primrose.API.Entities.Register;
 using Primrose.API.Services.Authentication.Hashing;
-using Primrose.API.Services.Authentication.Pasword;
+using Primrose.API.Services.Authentication.Password;
+using Primrose.API.Entities.RegisterUser;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,8 +40,8 @@ builder.Services.AddControllers(options =>
 builder.Services.AddScoped<IValidatorService, FluentValidatorService>();
 
 // validators
-builder.Services.AddScoped<IValidator<LoginRequest>, LoginRequestValidator>();
-builder.Services.AddScoped<IValidator<RegisterRequest>, RegisterRequestValidator>();
+builder.Services.AddScoped<IValidator<LoginUserRequest>, LoginRequestValidator>();
+builder.Services.AddScoped<IValidator<RegisterUserRequest>, RegisterRequestValidator>();
 
 // register repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();

@@ -43,7 +43,7 @@ public class AuthenticationTests
     [Fact]
     public async Task LoginUser_WithValidCredentials_ReturnsAuthenticated()
     {
-        var request = new LoginRequest
+        var request = new LoginUserRequest
         {
             Email = "ashton3@gmail.com",
             Password = "Password1!"
@@ -59,7 +59,7 @@ public class AuthenticationTests
     [Fact]
     public async Task LoginUser_WithInValidCredentials_ReturnsNotAuthenticated()
     {
-        var request = new LoginRequest
+        var request = new LoginUserRequest
         {
             Email = "somerandomemail@randomprovider.com",
             Password = "9nw4RGvmk2vMwVS9"
@@ -77,7 +77,7 @@ public class AuthenticationTests
     {
         var guid = Guid.NewGuid();
 
-        var request = new RegisterRequest
+        var request = new RegisterUserRequest
         {
             Email = $"{guid}@gmail.com",
             Password = "Password1!",
@@ -94,7 +94,7 @@ public class AuthenticationTests
     [Fact]
     public async Task RegisterUser_WithInValidCredentials_ReturnsNotCreated()
     {
-        var request = new RegisterRequest
+        var request = new RegisterUserRequest
         {
             Email = $"an invalid email",
             Password = "Password1!",

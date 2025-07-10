@@ -1,6 +1,6 @@
 namespace Primrose.API.Entities.Login;
 
-public sealed class LoginResponse
+public sealed class LoginUserResponse
     : ApiResponse
 {
     public bool IsAuthenticated { get; set; }

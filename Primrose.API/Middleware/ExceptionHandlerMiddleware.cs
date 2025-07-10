@@ -2,7 +2,6 @@ using System.Net;
 using System.Text.Json;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Primrose.API.Entities;
 using Primrose.API.Entities.Login;
 using Primrose.API.Validators;
 using Primrose.API.Validators.Services;

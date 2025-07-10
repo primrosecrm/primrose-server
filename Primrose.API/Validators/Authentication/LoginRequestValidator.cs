@@ -4,7 +4,7 @@ using Primrose.API.Validators;
 
 namespace Primrose.API.Services.Validators.Authentication;
 
-public class LoginRequestValidator : AbstractValidator<LoginRequest>
+public class LoginRequestValidator : AbstractValidator<LoginUserRequest>
 {
     public LoginRequestValidator()
     {

@@ -1,9 +1,9 @@
 using Primrose.API.Entities;
 using Primrose.API.Entities.Login;
-using Primrose.API.Entities.Register;
+using Primrose.API.Entities.RegisterUser;
 using Primrose.API.Repositories;
 using Primrose.API.Services.Authentication.Hashing;
-using Primrose.API.Services.Authentication.Pasword;
+using Primrose.API.Services.Authentication.Password;
 using Primrose.API.Validators;
 
 namespace Primrose.API.Services.Authentication;
@@ -15,9 +15,9 @@ public class AuthenticationService(IUserRepository userRepository, IHashService 
     private readonly IHashService _hashService = hashService;
     private readonly IPasswordService _passwordService = passwordService;
 
-    public async Task<LoginResponse> LoginUser(LoginRequest request)
+    public async Task<LoginUserResponse> LoginUser(LoginUserRequest request)
     {
-        var response = new LoginResponse();
+        var response = new LoginUserResponse();
 
         // seems fine to put this in here
         // note that this may cause problems if we change the password policy
@@ -36,13 +36,19 @@ public class AuthenticationService(IUserRepository userRepository, IHashService 
 
         var isAuthenticated = _hashService.VerifyHash(request.Password, user.PasswordHash);
 
+        if (isAuthenticated)
+        {
+            user.LastLogin = DateTime.Now;
+            await _userRepository.UpdateUser(user);
+        }
+
         response.IsAuthenticated = isAuthenticated;
         return response;
     }
 
-    public async Task<RegisterResponse> RegisterUser(RegisterRequest request)
+    public async Task<RegisterUserResponse> RegisterUser(RegisterUserRequest request)
     {
-        var response = new RegisterResponse();
+        var response = new RegisterUserResponse();
 
         var isValidPassword = _passwordService.CheckPassword(request.Password);
         if (!isValidPassword)

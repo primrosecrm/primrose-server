@@ -12,6 +12,14 @@ public class UserRepository : IUserRepository
         _client = client;
     }
 
+    public async Task<bool> UpdateUser(User user)
+    {
+        var result = await _client.From<User>()
+            .Update(user);
+
+        return result.Model != null;
+    }
+
     public async Task<bool> CreateUser(string email, string name, string passwordHash)
     {
         var user = new User

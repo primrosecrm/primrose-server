@@ -1,8 +1,10 @@
 using Primrose.API.Entities.Login;
-using Primrose.API.Entities.Register;
+using Primrose.API.Entities.RegisterUser;
+
+namespace Primrose.API.Services.Authentication;
 
 public interface IAuthenticationService
 {
-    Task<LoginResponse> LoginUser(LoginRequest request);
-    Task<RegisterResponse> RegisterUser(RegisterRequest request);
+    Task<LoginUserResponse> LoginUser(LoginUserRequest request);
+    Task<RegisterUserResponse> RegisterUser(RegisterUserRequest request);
 }

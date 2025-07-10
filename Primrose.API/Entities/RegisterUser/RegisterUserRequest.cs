@@ -1,6 +1,6 @@
-namespace Primrose.API.Entities.Register;
+namespace Primrose.API.Entities.RegisterUser;
 
-public sealed class RegisterRequest
+public sealed class RegisterUserRequest
 {
     public required string Email { get; set; }
     public required string Name { get; set; }

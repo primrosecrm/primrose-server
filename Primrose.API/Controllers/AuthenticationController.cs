@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Primrose.API.Entities.Login;
-using Primrose.API.Entities.Register;
+using Primrose.API.Entities.RegisterUser;
+using Primrose.API.Services.Authentication;
 using Primrose.API.Validators.Services;
 
 namespace Primrose.API.Controllers;
@@ -13,13 +14,13 @@ public class AuthenticationController(IAuthenticationService authService, IValid
     private readonly IAuthenticationService _authService = authService;
 
     [HttpPost(nameof(Login))]
-    public async Task<IActionResult> Login(LoginRequest request)
+    public async Task<IActionResult> Login(LoginUserRequest request)
     {
         return Result(await _authService.LoginUser(request));
     }
 
     [HttpPost(nameof(Register))]
-    public async Task<IActionResult> Register(RegisterRequest request)
+    public async Task<IActionResult> Register(RegisterUserRequest request)
     {
         return Result(await _authService.RegisterUser(request));
     }

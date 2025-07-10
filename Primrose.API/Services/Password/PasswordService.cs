@@ -1,4 +1,4 @@
-namespace Primrose.API.Services.Authentication.Pasword;
+namespace Primrose.API.Services.Authentication.Password;
 
 public class PasswordService(IPasswordPolicy policy)
     : IPasswordService
