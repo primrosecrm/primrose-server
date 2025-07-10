@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Primrose.API.Entities;
 using Primrose.API.Validators.Services;
 
+namespace Primrose.API.Validators;
+
 public class ValidationFilter : IActionFilter
 {
     private readonly IValidatorService _validator;
@@ -20,22 +22,20 @@ public class ValidationFilter : IActionFilter
 
             var result = _validator.Validate(argument);
 
-            if (!result.IsValid)
-            {
-                if (context.Controller is ControllerBase)
-                {
-                    context.Result = new BadRequestObjectResult(new ApiResponse()
-                    {
-                        Success = false,
-                        ErrorResult = new ApiValidationResult()
-                        {
-                            Errors = result.Errors,
-                        }
-                    });
+            if (result.Errors.Count is 0) continue;
+            if (context.Controller is not ControllerBase) continue;
 
-                    return;
+            var errorResponse = new ApiResponse()
+            {
+                Success = false,
+                ErrorResult = new ApiResult()
+                {
+                    Errors = result.Errors,
                 }
-            }
+            };
+
+            context.Result = new BadRequestObjectResult(errorResponse);
+            return;
         }
     }
 

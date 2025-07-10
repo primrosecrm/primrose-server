@@ -1,5 +1,6 @@
 using Primrose.API.Entities.Login;
 using Primrose.API.Repositories;
+using Primrose.API.Validators;
 
 namespace Primrose.API.Services.Authentication;
 
@@ -14,20 +15,37 @@ public class AuthenticationService
         _hashService = hashService;
     }
 
-    public async Task<bool> LoginUser(LoginRequest request)
+    public async Task<LoginResponse> LoginUser(LoginRequest request)
     {
-        var user = await _userRepository.GetUser(request.Email);
-        if (user is null) return false;
+        var response = new LoginResponse();
 
-        var isVerified = _hashService.VerifyHash(request.Password, user.PasswordHash);
-        return isVerified;
+        var user = await _userRepository.GetUser(request.Email);
+        if (user is null)
+        {
+            return response.Err<LoginResponse>(ApiErrorCode.UserFromEmailDoesNotExist);
+        }
+
+        var isAuthenticated = _hashService.VerifyHash(request.Password, user.PasswordHash);
+
+        response.IsAuthenticated = isAuthenticated;
+        return response;
     }
 
-    public async Task<bool> RegisterUser(RegisterRequest request)
+    public async Task<RegisterResponse> RegisterUser(RegisterRequest request)
     {
+        var response = new RegisterResponse();
+
         var passwordHash = _hashService.HashString(request.Password);
 
+        var existingUser = await _userRepository.GetUser(request.Email);
+        if (existingUser != null)
+        {
+            return response.Err<RegisterResponse>(ApiErrorCode.UserWithEmailAlreadyExists);
+        }
+
         var isCreated = await _userRepository.CreateUser(request.Email, request.Name, passwordHash);
-        return isCreated;
+
+        response.CreatedSuccessfully = isCreated;
+        return response;
     }
 }

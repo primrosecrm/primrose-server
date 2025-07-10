@@ -13,18 +13,4 @@ public class PrimroseApiController : ControllerBase
     {
         _validator = validator;
     }
-
-    public async Task<ActionResult> Handle<TRequest, TResponse>(TRequest request, Func<Task<TResponse>> action)
-        where TRequest : class
-    {
-        var validation = _validator.Validate(request);
-        if (!validation.IsValid)
-        { 
-            var failureResponse = Activator.CreateInstance(typeof(TResponse), false, validation);
-            return BadRequest(failureResponse);
-        }
-
-        var response = await action();
-        return Ok(response);
-    }
 }

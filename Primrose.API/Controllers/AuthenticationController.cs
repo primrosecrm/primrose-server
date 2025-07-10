@@ -21,12 +21,12 @@ public class AuthenticationController
     [HttpPost(nameof(Login))]
     public async Task<IActionResult> Login(LoginRequest request)
     {
-        return LoginResponse.Ok(await _authService.LoginUser(request));
+        return Ok(await _authService.LoginUser(request));
     }
 
     [HttpPost(nameof(Register))]
     public async Task<IActionResult> Register(RegisterRequest request)
     {
-        return RegisterResponse.Ok(await _authService.RegisterUser(request));
+        return Ok(await _authService.RegisterUser(request));
     }
 }

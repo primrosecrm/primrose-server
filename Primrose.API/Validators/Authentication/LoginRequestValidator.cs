@@ -1,5 +1,6 @@
 using FluentValidation;
 using Primrose.API.Entities.Login;
+using Primrose.API.Validators;
 
 namespace Primrose.API.Services.Validators.Authentication;
 
@@ -9,14 +10,14 @@ public class LoginRequestValidator : AbstractValidator<LoginRequest>
     {
         RuleFor(x => x.Email)
             .NotEmpty()
-            .NotNull()
+                .WithErrorCode(ApiErrorCode.InvalidEmailFormat.ToString())
             .EmailAddress()
-            .WithMessage("Invalid email format");
+                .WithErrorCode(ApiErrorCode.InvalidEmailFormat.ToString());
 
         RuleFor(x => x.Password)
             .NotEmpty()
-            .NotNull()
+                .WithErrorCode(ApiErrorCode.InvalidPasswordFormat.ToString())
             .MinimumLength(8)
-            .WithMessage("Password must be at least 8 characters");
+                .WithErrorCode(ApiErrorCode.InvalidPasswordFormat.ToString());
     }
 }

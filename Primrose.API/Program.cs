@@ -7,6 +7,7 @@ using Supabase;
 using FluentValidation;
 using Primrose.API.Validators.Services;
 using Primrose.API.Services.Validators.Authentication;
+using Primrose.API.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 

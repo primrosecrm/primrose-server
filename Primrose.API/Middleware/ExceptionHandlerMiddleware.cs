@@ -1,10 +1,10 @@
 using System.Net;
 using System.Text.Json;
 using Primrose.API.Entities;
+using Primrose.API.Validators;
 using Primrose.API.Validators.Services;
 
 namespace Primrose.API.Middleware;
-
 
 public class ExceptionHandlingMiddleware
 {
@@ -19,7 +19,6 @@ public class ExceptionHandlingMiddleware
     {
         _next = next;
     }
-
 
     public async Task InvokeAsync(HttpContext context)
     {
@@ -37,9 +36,15 @@ public class ExceptionHandlingMiddleware
                 ErrorResult = new()
                 { 
                     Errors = [
-                        new ApiValidationError("Oops", "An unexpected error occurred."),
-                        new ApiValidationError("Exception", ex.Message),
-                        new ApiValidationError("Inner Exception", ex.InnerException?.Message ?? "")
+                        // TODO: remove escape characters from this error message - it looks ugly.
+                        new ApiError(
+                            $"Exception: {ex.Message}",
+                            ApiErrorCode.UnexpectedException.ToString()
+                        ),
+                        new ApiError(
+                            $"Inner Exception: {ex.InnerException?.Message ?? "No inner exception"}",
+                            ApiErrorCode.UnexpectedException.ToString()
+                        )
                     ]
                 }
             };
