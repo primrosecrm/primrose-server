@@ -8,12 +8,12 @@ using Primrose.API.Validators;
 
 namespace Primrose.API.Services.Authentication;
 
-public class AuthenticationService(IUserRepository userRepository, IHashService hashService, PasswordService passwordService)
+public class AuthenticationService(IUserRepository userRepository, IHashService hashService, IPasswordService passwordService)
     : IAuthenticationService
 {
     private readonly IUserRepository _userRepository = userRepository;
     private readonly IHashService _hashService = hashService;
-    private readonly PasswordService _passwordService = passwordService;
+    private readonly IPasswordService _passwordService = passwordService;
 
     public async Task<LoginResponse> LoginUser(LoginRequest request)
     {

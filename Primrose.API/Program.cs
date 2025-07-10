@@ -49,7 +49,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 // register services
 builder.Services.AddScoped<IHashService, BCryptHashService>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
-builder.Services.AddScoped<PasswordService, PasswordService>();
+builder.Services.AddScoped<IPasswordService, PasswordService>();
 builder.Services.AddScoped<IPasswordPolicy, OwaspPasswordPolicy>();
 
 

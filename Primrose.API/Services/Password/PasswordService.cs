@@ -1,6 +1,7 @@
 namespace Primrose.API.Services.Authentication.Pasword;
 
 public class PasswordService(IPasswordPolicy policy)
+    : IPasswordService
 {
     private readonly IPasswordPolicy _policy = policy;
 
