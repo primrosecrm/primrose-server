@@ -1,6 +1,9 @@
 using System.Net;
 using System.Text.Json;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Primrose.API.Entities;
+using Primrose.API.Entities.Login;
 using Primrose.API.Validators;
 using Primrose.API.Validators.Services;
 
@@ -30,13 +33,12 @@ public class ExceptionHandlingMiddleware
         {
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-            var apiResponse = new ApiResponse
+            var apiResponse = new BadResponse
             {
                 Success = false,
                 ErrorResult = new()
                 { 
                     Errors = [
-                        // TODO: remove escape characters from this error message - it looks ugly.
                         new ApiError(
                             $"Exception: {ex.Message}",
                             ApiErrorCode.UnexpectedException.ToString()
@@ -49,8 +51,12 @@ public class ExceptionHandlingMiddleware
                 }
             };
 
-            var jsonResponse = JsonSerializer.Serialize(apiResponse, SerializerWriteOptions);
-            await context.Response.WriteAsync(jsonResponse);
+            var jsonString = System.Text.Json.JsonSerializer.Serialize(apiResponse, SerializerWriteOptions);
+
+            var parsedJson = JToken.Parse(jsonString);
+            string prettyJson = parsedJson.ToString(Formatting.Indented);
+
+            await context.Response.WriteAsync(prettyJson);
         }
     }
 }

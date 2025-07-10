@@ -1,3 +1,4 @@
+using Primrose.API.Entities;
 using Primrose.API.Entities.Login;
 using Primrose.API.Entities.Register;
 using Primrose.API.Repositories;
@@ -7,18 +8,12 @@ using Primrose.API.Validators;
 
 namespace Primrose.API.Services.Authentication;
 
-public class AuthenticationService : IAuthenticationService
+public class AuthenticationService(IUserRepository userRepository, IHashService hashService, PasswordService passwordService)
+    : IAuthenticationService
 {
-    private readonly IUserRepository _userRepository;
-    private readonly IHashService _hashService;
-    private readonly PasswordService _passwordService;
-
-    public AuthenticationService(IUserRepository userRepository, IHashService hashService, PasswordService passwordService)
-    {
-        _userRepository = userRepository;
-        _hashService = hashService;
-        _passwordService = passwordService;
-    }
+    private readonly IUserRepository _userRepository = userRepository;
+    private readonly IHashService _hashService = hashService;
+    private readonly PasswordService _passwordService = passwordService;
 
     public async Task<LoginResponse> LoginUser(LoginRequest request)
     {
@@ -26,8 +21,9 @@ public class AuthenticationService : IAuthenticationService
 
         // seems fine to put this in here
         // note that this may cause problems if we change the password policy
-        var isValidPassword = _passwordService.IsValidPassword(request.Password);
-        if (!isValidPassword) {
+        var isValidPassword = _passwordService.CheckPassword(request.Password);
+        if (!isValidPassword)
+        {
             response.IsAuthenticated = false;
             return response;
         }
@@ -35,7 +31,7 @@ public class AuthenticationService : IAuthenticationService
         var user = await _userRepository.GetUser(request.Email);
         if (user is null)
         {
-            return response.Err<LoginResponse>(ApiErrorCode.UserFromEmailDoesNotExist);
+            return response.Err(ApiErrorCode.UserFromEmailDoesNotExist);
         }
 
         var isAuthenticated = _hashService.VerifyHash(request.Password, user.PasswordHash);
@@ -48,9 +44,10 @@ public class AuthenticationService : IAuthenticationService
     {
         var response = new RegisterResponse();
 
-        var isValidPassword = _passwordService.IsValidPassword(request.Password);
-        if (!isValidPassword) { 
-            return response.Err<RegisterResponse>(ApiErrorCode.InvalidPasswordFormat);
+        var isValidPassword = _passwordService.CheckPassword(request.Password);
+        if (!isValidPassword)
+        { 
+            return response.Err(ApiErrorCode.InvalidPasswordFormat);
         }
 
         var passwordHash = _hashService.HashString(request.Password);
@@ -58,7 +55,7 @@ public class AuthenticationService : IAuthenticationService
         var existingUser = await _userRepository.GetUser(request.Email);
         if (existingUser != null)
         {
-            return response.Err<RegisterResponse>(ApiErrorCode.UserWithEmailAlreadyExists);
+            return response.Err(ApiErrorCode.UserWithEmailAlreadyExists);
         }
 
         var isCreated = await _userRepository.CreateUser(request.Email, request.Name, passwordHash);

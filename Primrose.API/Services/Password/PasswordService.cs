@@ -4,7 +4,7 @@ public class PasswordService(IPasswordPolicy policy)
 {
     private readonly IPasswordPolicy _policy = policy;
 
-    public bool IsValidPassword(string password)
+    public bool CheckPassword(string password)
     {
         if (password.Length < _policy.MinLength) return false;
         if (password.Length > _policy.MaxLength) return false;

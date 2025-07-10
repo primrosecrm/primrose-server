@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Primrose.API.Entities;
+using Primrose.API.Entities.Login;
 using Primrose.API.Validators.Services;
 
 namespace Primrose.API.Validators;
@@ -25,7 +26,7 @@ public class ValidationFilter : IActionFilter
             if (result.Errors.Count is 0) continue;
             if (context.Controller is not ControllerBase) continue;
 
-            var errorResponse = new ApiResponse()
+            var errorResponse = new BadResponse()
             {
                 Success = false,
                 ErrorResult = new ApiResult()
