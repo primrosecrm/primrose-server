@@ -1,4 +1,4 @@
-namespace Primrose.API.Validators.Services;
+namespace Primrose.Validators.Services;
 
 // allows us to be less coupled to specific validation services, such as FluentValidation
 public interface IValidatorService

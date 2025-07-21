@@ -1,10 +1,12 @@
-using Primrose.API.Entities;
-using Primrose.API.Entities.Login;
-using Primrose.API.Entities.RegisterUser;
-using Primrose.API.Repositories;
-using Primrose.API.Services.Authentication.Hashing;
-using Primrose.API.Services.Authentication.Password;
 using Primrose.API.Validators;
+using Primrose.Entities;
+using Primrose.Entities.DeactivateUser;
+using Primrose.Entities.LoginUser;
+using Primrose.Entities.RegisterUser;
+using Primrose.Repositories;
+using Primrose.Services.Authentication;
+using Primrose.Services.Hashing;
+using Primrose.Services.Password;
 
 namespace Primrose.API.Services.Authentication;
 
@@ -52,7 +54,7 @@ public class AuthenticationService(IUserRepository userRepository, IHashService 
 
         var isValidPassword = _passwordService.CheckPassword(request.Password);
         if (!isValidPassword)
-        { 
+        {
             return response.Err(ApiErrorCode.InvalidPasswordFormat);
         }
 
@@ -68,5 +70,10 @@ public class AuthenticationService(IUserRepository userRepository, IHashService 
 
         response.CreatedSuccessfully = isCreated;
         return response;
+    }
+    
+    public Task<DeactivateUserResponse> DeactivateUser(RegisterUserRequest request)
+    {
+        throw new NotImplementedException();
     }
 }

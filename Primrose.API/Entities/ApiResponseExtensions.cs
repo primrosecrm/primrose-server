@@ -1,7 +1,7 @@
-using Primrose.API.Mappers;
 using Primrose.API.Validators;
+using Primrose.Mappers;
 
-namespace Primrose.API.Entities;
+namespace Primrose.Entities;
 
 public static class ApiResponseExtensions
 {

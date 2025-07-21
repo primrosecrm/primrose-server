@@ -1,4 +1,4 @@
-namespace Primrose.API.Services.Authentication.Hashing;
+namespace Primrose.Services.Hashing;
 
 public class BCryptHashService : IHashService
 {

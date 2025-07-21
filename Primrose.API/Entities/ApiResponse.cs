@@ -1,8 +1,6 @@
-using Primrose.API.Mappers;
-using Primrose.API.Validators;
-using Primrose.API.Validators.Services;
+using Primrose.Validators.Services;
 
-namespace Primrose.API.Entities;
+namespace Primrose.Entities;
 
 // This class represents the result of a HTTP API operation.
 // Success is set on whether an unexpected error has occurred.

@@ -1,10 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-using Primrose.API.Entities.Login;
-using Primrose.API.Entities.RegisterUser;
-using Primrose.API.Services.Authentication;
-using Primrose.API.Validators.Services;
+using Primrose.Entities.LoginUser;
+using Primrose.Entities.RegisterUser;
+using Primrose.Services.Authentication;
 
-namespace Primrose.API.Controllers;
+namespace Primrose.Controllers;
 
 [ApiController]
 [Route("[controller]")]
@@ -13,14 +12,20 @@ public class AuthenticationController(IAuthenticationService authService)
 {
     private readonly IAuthenticationService _authService = authService;
 
-    [HttpPost(nameof(Login))]
-    public async Task<IActionResult> Login(LoginUserRequest request)
+    [HttpPost(nameof(LoginUser))]
+    public async Task<IActionResult> LoginUser(LoginUserRequest request)
     {
         return ApiResult(await _authService.LoginUser(request));
     }
 
-    [HttpPost(nameof(Register))]
-    public async Task<IActionResult> Register(RegisterUserRequest request)
+    [HttpPost(nameof(RegisterUser))]
+    public async Task<IActionResult> RegisterUser(RegisterUserRequest request)
+    {
+        return ApiResult(await _authService.RegisterUser(request));
+    }
+
+    [HttpPost(nameof(DeactivateUser))]
+    public async Task<IActionResult> DeactivateUser(RegisterUserRequest request)
     {
         return ApiResult(await _authService.RegisterUser(request));
     }

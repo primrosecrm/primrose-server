@@ -1,6 +1,6 @@
-using Primrose.API.Models.Authentication;
+using Primrose.Models.Authentication;
 
-namespace Primrose.API.Repositories;
+namespace Primrose.Repositories;
 
 
 public interface IUserRepository

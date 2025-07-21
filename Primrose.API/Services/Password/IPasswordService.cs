@@ -1,4 +1,4 @@
-namespace Primrose.API.Services.Authentication.Password;
+namespace Primrose.Services.Password;
 
 public interface IPasswordService
 {

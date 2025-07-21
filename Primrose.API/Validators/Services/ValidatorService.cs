@@ -1,8 +1,9 @@
 
 using FluentValidation;
-using Primrose.API.Mappers;
+using Primrose.API.Validators;
+using Primrose.Mappers;
 
-namespace Primrose.API.Validators.Services;
+namespace Primrose.Validators.Services;
 
 // The actual FluentValidation implementation of an Api validator service
 public class FluentValidatorService(IServiceProvider provider) 

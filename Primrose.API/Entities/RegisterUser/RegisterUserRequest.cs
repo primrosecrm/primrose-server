@@ -1,4 +1,4 @@
-namespace Primrose.API.Entities.RegisterUser;
+namespace Primrose.Entities.RegisterUser;
 
 public sealed class RegisterUserRequest
 {

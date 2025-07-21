@@ -1,10 +1,12 @@
-using Primrose.API.Entities.Login;
-using Primrose.API.Entities.RegisterUser;
+using Primrose.Entities.DeactivateUser;
+using Primrose.Entities.LoginUser;
+using Primrose.Entities.RegisterUser;
 
-namespace Primrose.API.Services.Authentication;
+namespace Primrose.Services.Authentication;
 
 public interface IAuthenticationService
 {
     Task<LoginUserResponse> LoginUser(LoginUserRequest request);
     Task<RegisterUserResponse> RegisterUser(RegisterUserRequest request);
+    Task<DeactivateUserResponse> DeactivateUser(RegisterUserRequest request);
 }

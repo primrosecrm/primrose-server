@@ -1,7 +1,7 @@
-using Primrose.API.Models.Authentication;
+using Primrose.Models.Authentication;
 using Supabase;
 
-namespace Primrose.API.Repositories;
+namespace Primrose.Repositories;
 
 public class UserRepository : IUserRepository
 {

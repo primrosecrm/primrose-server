@@ -1,4 +1,4 @@
-namespace Primrose.API.Validators.Services;
+namespace Primrose.Validators.Services;
 
 // library‑agnostic validation result
 public sealed record ApiError(string Message, string Code);

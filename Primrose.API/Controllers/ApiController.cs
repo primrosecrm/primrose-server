@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using Primrose.API.Entities;
-using Primrose.API.Validators.Services;
+using Primrose.Entities;
 
-namespace Primrose.API.Controllers;
+namespace Primrose.Controllers;
 
 // This controller currently exists so I dont have to inject the IValidatorService into all controllers
 [ApiController]

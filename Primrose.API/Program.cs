@@ -1,17 +1,18 @@
-using Primrose.API.Middleware;
-using Primrose.API.Repositories;
+using Primrose.Middleware;
+using Primrose.Repositories;
+using Primrose.Services.Authentication;
+using Primrose.Entities.LoginUser;
+using Primrose.Validators.Services;
+using Primrose.Services.Hashing;
+using Primrose.Services.Password;
+using Primrose.Entities.RegisterUser;
 using Primrose.API.Services.Authentication;
-using Primrose.API.Entities.Login;
 
-using Supabase;
-using FluentValidation;
-using Primrose.API.Validators.Services;
-using Primrose.API.Services.Validators.Authentication;
-using Primrose.API.Validators;
-using Primrose.API.Services.Authentication.Hashing;
-using Primrose.API.Services.Authentication.Password;
-using Primrose.API.Entities.RegisterUser;
 using System.Threading.RateLimiting;
+using FluentValidation;
+using Supabase;
+using Primrose.Validators.Filters;
+using Primrose.Validators.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,6 +1,6 @@
 using Primrose.API.Validators;
 
-namespace Primrose.API.Mappers;
+namespace Primrose.Mappers;
 
 public static class ApiErrorCodeMapper
 {

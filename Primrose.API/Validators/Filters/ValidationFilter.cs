@@ -1,10 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Primrose.API.Entities;
-using Primrose.API.Entities.Login;
-using Primrose.API.Validators.Services;
+using Primrose.Entities;
+using Primrose.Validators.Services;
 
-namespace Primrose.API.Validators;
+namespace Primrose.Validators.Filters;
 
 public class ValidationFilter : IActionFilter
 {

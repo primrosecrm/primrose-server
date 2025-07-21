@@ -2,11 +2,11 @@ using System.Net;
 using System.Text.Json;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Primrose.API.Entities.Login;
 using Primrose.API.Validators;
-using Primrose.API.Validators.Services;
+using Primrose.Entities;
+using Primrose.Validators.Services;
 
-namespace Primrose.API.Middleware;
+namespace Primrose.Middleware;
 
 public class ExceptionHandlingMiddleware
 {

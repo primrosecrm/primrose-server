@@ -4,7 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>primrose_server</RootNamespace>
+    <RootNamespace>Primrose</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

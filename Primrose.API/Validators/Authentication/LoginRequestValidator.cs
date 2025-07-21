@@ -1,8 +1,8 @@
 using FluentValidation;
-using Primrose.API.Entities.Login;
 using Primrose.API.Validators;
+using Primrose.Entities.LoginUser;
 
-namespace Primrose.API.Services.Validators.Authentication;
+namespace Primrose.Validators.Authentication;
 
 public class LoginRequestValidator : AbstractValidator<LoginUserRequest>
 {
