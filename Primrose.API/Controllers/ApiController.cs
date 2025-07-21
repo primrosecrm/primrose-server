@@ -8,7 +8,7 @@ namespace Primrose.Controllers;
 public class PrimroseApiController()
     : ControllerBase
 {
-    public IActionResult ApiResult<T>(T value)
+    public ActionResult ApiResult<T>(T value)
         where T : ApiResponse
     {
         var isBadRequest = value.ErrorResult.Errors.Count != 0;

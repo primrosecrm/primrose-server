@@ -13,6 +13,7 @@ using FluentValidation;
 using Supabase;
 using Primrose.Validators.Filters;
 using Primrose.Validators.Authentication;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,13 +24,20 @@ builder.WebHost.ConfigureKestrel(options =>
 
 const string LocalHostCorsPolicy = "AllowLocalHost";
 
+// for production
+// const string ProductionCorsPolicy = "AllowTrustedOrigins";
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(LocalHostCorsPolicy, builder =>
     {
+        // replace with frontend domain eventually
         builder.WithOrigins("http://localhost:6969")
             .AllowAnyHeader()
             .AllowAnyMethod();
+
+            // in production
+            // .AllowCredentials();
     });
 });
 
@@ -43,6 +51,13 @@ builder.Services.AddRateLimiter(options =>
                 PermitLimit = 100,
                 Window = TimeSpan.FromMinutes(1)
             }));
+});
+
+builder.Services.AddApiVersioning(options =>
+{
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.ReportApiVersions = true;
 });
 
 builder.Services.AddControllers(options =>

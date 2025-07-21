@@ -71,9 +71,22 @@ public class AuthenticationService(IUserRepository userRepository, IHashService 
         response.CreatedSuccessfully = isCreated;
         return response;
     }
-    
-    public Task<DeactivateUserResponse> DeactivateUser(RegisterUserRequest request)
+
+    public async Task<DeactivateUserResponse> DeactivateUser(DeactivateUserRequest request)
     {
-        throw new NotImplementedException();
+        var response = new DeactivateUserResponse();
+
+        var user = await _userRepository.GetUser(request.Email);
+        if (user is null)
+        {
+            return response.Err(ApiErrorCode.UserFromEmailDoesNotExist);
+        }
+
+        user.IsActive = false;
+        
+        var isUpdated = await _userRepository.UpdateUser(user);
+
+        response.IsDeactivated = isUpdated;
+        return response;
     }
 }

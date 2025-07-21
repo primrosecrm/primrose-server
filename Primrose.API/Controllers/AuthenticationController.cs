@@ -1,32 +1,34 @@
-using Microsoft.AspNetCore.Mvc;
+using Primrose.Entities.DeactivateUser;
 using Primrose.Entities.LoginUser;
 using Primrose.Entities.RegisterUser;
 using Primrose.Services.Authentication;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Primrose.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[ApiVersion("1.0")]
+[Route("api/v{version:apiVersion}/[controller]")]
 public class AuthenticationController(IAuthenticationService authService)
     : PrimroseApiController
 {
     private readonly IAuthenticationService _authService = authService;
 
-    [HttpPost(nameof(LoginUser))]
-    public async Task<IActionResult> LoginUser(LoginUserRequest request)
+    [HttpPost("Login")]
+    public async Task<ActionResult<LoginUserResponse>> LoginUser(LoginUserRequest request)
     {
         return ApiResult(await _authService.LoginUser(request));
     }
 
-    [HttpPost(nameof(RegisterUser))]
-    public async Task<IActionResult> RegisterUser(RegisterUserRequest request)
+    [HttpPost("Register")]
+    public async Task<ActionResult<RegisterUserResponse>> RegisterUser(RegisterUserRequest request)
     {
         return ApiResult(await _authService.RegisterUser(request));
     }
 
-    [HttpPost(nameof(DeactivateUser))]
-    public async Task<IActionResult> DeactivateUser(RegisterUserRequest request)
+    [HttpPost("Deactivate")]
+    public async Task<ActionResult<DeactivateUserResponse>> DeactivateUser(DeactivateUserRequest request)
     {
-        return ApiResult(await _authService.RegisterUser(request));
+        return ApiResult(await _authService.DeactivateUser(request));
     }
 }

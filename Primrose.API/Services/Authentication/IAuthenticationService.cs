@@ -8,5 +8,5 @@ public interface IAuthenticationService
 {
     Task<LoginUserResponse> LoginUser(LoginUserRequest request);
     Task<RegisterUserResponse> RegisterUser(RegisterUserRequest request);
-    Task<DeactivateUserResponse> DeactivateUser(RegisterUserRequest request);
+    Task<DeactivateUserResponse> DeactivateUser(DeactivateUserRequest request);
 }
