@@ -11,6 +11,7 @@ using Primrose.API.Validators;
 using Primrose.API.Services.Authentication.Hashing;
 using Primrose.API.Services.Authentication.Password;
 using Primrose.API.Entities.RegisterUser;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,15 +32,27 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddRateLimiter(options =>
+{
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 100,
+                Window = TimeSpan.FromMinutes(1)
+            }));
+});
+
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<ValidationFilter>();
 });
 
-// validator service
+// register validator service
 builder.Services.AddScoped<IValidatorService, FluentValidatorService>();
 
-// validators
+// register validators
 builder.Services.AddScoped<IValidator<LoginUserRequest>, LoginRequestValidator>();
 builder.Services.AddScoped<IValidator<RegisterUserRequest>, RegisterRequestValidator>();
 
@@ -67,11 +80,14 @@ var options = new SupabaseOptions
 
 builder.Services.AddSingleton(provider => new Client(url, key, options));
 
+// build app
 var app = builder.Build();
 
 app.UseCors(LocalHostCorsPolicy);
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+app.UseRateLimiter();
 
 app.MapControllers();
 

@@ -6,12 +6,10 @@ namespace Primrose.API.Controllers;
 
 // This controller currently exists so I dont have to inject the IValidatorService into all controllers
 [ApiController]
-public class PrimroseApiController(IValidatorService validator)
+public class PrimroseApiController()
     : ControllerBase
 {
-    protected readonly IValidatorService _validator = validator;
-
-    public IActionResult Result<T>(T value)
+    public IActionResult ApiResult<T>(T value)
         where T : ApiResponse
     {
         var isBadRequest = value.ErrorResult.Errors.Count != 0;

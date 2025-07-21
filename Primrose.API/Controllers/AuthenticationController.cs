@@ -8,20 +8,20 @@ namespace Primrose.API.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class AuthenticationController(IAuthenticationService authService, IValidatorService validator)
-    : PrimroseApiController(validator)
+public class AuthenticationController(IAuthenticationService authService)
+    : PrimroseApiController
 {
     private readonly IAuthenticationService _authService = authService;
 
     [HttpPost(nameof(Login))]
     public async Task<IActionResult> Login(LoginUserRequest request)
     {
-        return Result(await _authService.LoginUser(request));
+        return ApiResult(await _authService.LoginUser(request));
     }
 
     [HttpPost(nameof(Register))]
     public async Task<IActionResult> Register(RegisterUserRequest request)
     {
-        return Result(await _authService.RegisterUser(request));
+        return ApiResult(await _authService.RegisterUser(request));
     }
 }
