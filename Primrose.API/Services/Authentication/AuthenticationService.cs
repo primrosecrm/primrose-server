@@ -1,4 +1,6 @@
+using System.Security.Claims;
 using Primrose.API.Validators;
+using Primrose.Auth;
 using Primrose.Entities;
 using Primrose.Entities.DeactivateUser;
 using Primrose.Entities.LoginUser;
@@ -10,12 +12,14 @@ using Primrose.Services.Password;
 
 namespace Primrose.API.Services.Authentication;
 
-public class AuthenticationService(IUserRepository userRepository, IHashService hashService, IPasswordService passwordService)
+public class AuthenticationService(IUserRepository userRepository, IHashService hashService, IPasswordService passwordService, JwtProvider JwtProvider, IHttpContextAccessor httpContextAccessor)
     : IAuthenticationService
 {
     private readonly IUserRepository _userRepository = userRepository;
     private readonly IHashService _hashService = hashService;
     private readonly IPasswordService _passwordService = passwordService;
+    private readonly JwtProvider _jwtProvider = JwtProvider;
+    private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
 
     public async Task<LoginUserResponse> LoginUser(LoginUserRequest request)
     {
@@ -45,6 +49,8 @@ public class AuthenticationService(IUserRepository userRepository, IHashService 
         }
 
         response.IsAuthenticated = isAuthenticated;
+        response.JwtToken = response.IsAuthenticated ? _jwtProvider.Create(user) : null;
+
         return response;
     }
 
@@ -71,7 +77,7 @@ public class AuthenticationService(IUserRepository userRepository, IHashService 
         response.CreatedSuccessfully = isCreated;
         return response;
     }
-
+    
     public async Task<DeactivateUserResponse> DeactivateUser(DeactivateUserRequest request)
     {
         var response = new DeactivateUserResponse();
@@ -82,8 +88,16 @@ public class AuthenticationService(IUserRepository userRepository, IHashService 
             return response.Err(ApiErrorCode.UserFromEmailDoesNotExist);
         }
 
+        var jwtTokenEmail = _httpContextAccessor.HttpContext?.User?.Claims
+            .FirstOrDefault(c => c.Type is ClaimTypes.Email)?.Value;
+
+        if (jwtTokenEmail != user.Email)
+        {
+            return response.Err(ApiErrorCode.UserForbidden);
+        }
+
         user.IsActive = false;
-        
+
         var isUpdated = await _userRepository.UpdateUser(user);
 
         response.IsDeactivated = isUpdated;

@@ -14,12 +14,19 @@ using Supabase;
 using Primrose.Validators.Filters;
 using Primrose.Validators.Authentication;
 using Microsoft.AspNetCore.Mvc;
+using Primrose.Auth;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.ListenAnyIP(5140);
+    options.ListenAnyIP(7050, listenOptions =>
+    {
+        listenOptions.UseHttps();
+    });
 });
 
 const string LocalHostCorsPolicy = "AllowLocalHost";
@@ -81,12 +88,41 @@ builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IPasswordService, PasswordService>();
 builder.Services.AddScoped<IPasswordPolicy, OwaspPasswordPolicy>();
 
-
 DotNetEnv.Env.Load();
 
-// setup supabase
-var url = Environment.GetEnvironmentVariable("SUPABASE_URL") ?? throw new Exception("SUPABASE_URL was null");
-var key = Environment.GetEnvironmentVariable("SUPABASE_KEY") ?? throw new Exception("SUPABASE_KEY was null");
+
+// set up jwt
+var jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET") 
+    ?? throw new Exception("JWT_SECRET was null");
+
+builder.Services.AddSingleton(new JwtProvider(jwtSecret));
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
+        ClockSkew = TimeSpan.Zero
+    };
+});
+
+builder.Services.AddHttpContextAccessor();
+
+// set up supabase
+var url = Environment.GetEnvironmentVariable("SUPABASE_URL") 
+    ?? throw new Exception("SUPABASE_URL was null");
+
+var key = Environment.GetEnvironmentVariable("SUPABASE_KEY") 
+    ?? throw new Exception("SUPABASE_KEY was null");
 
 var options = new SupabaseOptions
 {
@@ -96,6 +132,11 @@ var options = new SupabaseOptions
 
 builder.Services.AddSingleton(provider => new Client(url, key, options));
 
+builder.Services.AddHttpsRedirection(options =>
+{
+    options.HttpsPort = 7050;
+});
+
 // build app
 var app = builder.Build();
 
@@ -103,8 +144,14 @@ app.UseCors(LocalHostCorsPolicy);
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
+app.UseHttpsRedirection();
+
+app.UseAuthentication();
+
+app.UseAuthorization();
+
 app.UseRateLimiter();
 
 app.MapControllers();
 
-app.Run();
+app.Run(); 

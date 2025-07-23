@@ -5,6 +5,7 @@ namespace Primrose.Controllers;
 
 // This controller currently exists so I dont have to inject the IValidatorService into all controllers
 [ApiController]
+[RequireHttps]
 public class PrimroseApiController()
     : ControllerBase
 {
