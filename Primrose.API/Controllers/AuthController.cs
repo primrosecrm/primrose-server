@@ -11,10 +11,10 @@ namespace Primrose.Controllers;
 [ApiVersion("1.0")]
 [RequireHttps]
 [Route("api/v{version:apiVersion}/[controller]")]
-public class AuthenticationController(IAuthenticationService authService)
+public class AuthController(IAuthService authService)
     : PrimroseApiController
 {
-    private readonly IAuthenticationService _authService = authService;
+    private readonly IAuthService _authService = authService;
 
     [AllowAnonymous]
     [HttpPost("Login")]
@@ -28,12 +28,5 @@ public class AuthenticationController(IAuthenticationService authService)
     public async Task<ActionResult<RegisterUserResponse>> RegisterUser(RegisterUserRequest request)
     {
         return ApiResult(await _authService.RegisterUser(request));
-    }
-
-    [Authorize]
-    [HttpPost("Deactivate")]
-    public async Task<ActionResult<DeactivateUserResponse>> DeactivateUser(DeactivateUserRequest request)
-    {
-        return ApiResult(await _authService.DeactivateUser(request));
     }
 }

@@ -9,10 +9,11 @@ using JwtRegisteredClaimNames = System.IdentityModel.Tokens.Jwt.JwtRegisteredCla
 namespace Primrose.Auth;
 
 public sealed class JwtProvider(string secret)
+    : ITokenProvider
 {
     private readonly string Secret = secret;
 
-    public string Create(User user)
+    public string Create(PrimroseUser user)
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Secret));
 

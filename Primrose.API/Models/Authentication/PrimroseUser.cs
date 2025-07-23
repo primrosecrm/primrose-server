@@ -6,7 +6,7 @@ namespace Primrose.Models.Authentication;
 #pragma warning disable CS8618
 
 [Table("users")]
-public sealed class User : BaseModel
+public sealed class PrimroseUser : BaseModel
 {
     [PrimaryKey("user_id", false)]
     public Guid UserId { get; set; } = Guid.NewGuid();

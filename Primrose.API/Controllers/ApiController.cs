@@ -10,9 +10,9 @@ public class PrimroseApiController()
     : ControllerBase
 {
     public ActionResult ApiResult<T>(T value)
-        where T : ApiResponse
+        where T : ApiResponse 
     {
-        var isBadRequest = value.ErrorResult.Errors.Count != 0;
-        return isBadRequest ? BadRequest(value) : Ok(value);
+        var hasErrors = value.ErrorResult.Errors.Count != 0;
+        return hasErrors ? BadRequest(value) : Ok(value);
     }
 }

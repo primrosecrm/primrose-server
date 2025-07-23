@@ -1,6 +1,7 @@
 
 using FluentValidation;
 using Primrose.API.Validators;
+using Primrose.Entities;
 using Primrose.Mappers;
 
 namespace Primrose.Validators.Services;
@@ -17,7 +18,7 @@ public class FluentValidatorService(IServiceProvider provider)
     // This allows us to simply register a validator service and it will automatically
     // be resolved by this method.
     public ApiResult Validate<T>(T request)
-        where T : class
+        where T : ApiRequest
     {
         var validatorType = typeof(IValidator<>).MakeGenericType(request.GetType());
         var validator = _provider.GetService(validatorType) as IValidator;

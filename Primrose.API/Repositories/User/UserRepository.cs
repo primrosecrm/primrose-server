@@ -1,20 +1,15 @@
 using Primrose.Models.Authentication;
 using Supabase;
 
-namespace Primrose.Repositories;
+namespace Primrose.Repositories.User;
 
-public class UserRepository : IUserRepository
+public class UserRepository(Client client) : IUserRepository
 {
-    private readonly Client _client;
+    private readonly Client _client = client;
 
-    public UserRepository(Client client)
+    public async Task<bool> UpdateUser(PrimroseUser user)
     {
-        _client = client;
-    }
-
-    public async Task<bool> UpdateUser(User user)
-    {
-        var result = await _client.From<User>()
+        var result = await _client.From<PrimroseUser>()
             .Update(user);
 
         return result.Model != null;
@@ -22,22 +17,22 @@ public class UserRepository : IUserRepository
 
     public async Task<bool> CreateUser(string email, string name, string passwordHash)
     {
-        var user = new User
+        var user = new PrimroseUser
         {
             Email = email,
             Name = name,
             PasswordHash = passwordHash
         };
 
-        var result = await _client.From<User>()
+        var result = await _client.From<PrimroseUser>()
             .Insert(user);
 
         return result.Model != null;
     }
 
-    public async Task<User?> GetUser(string email)
+    public async Task<PrimroseUser?> GetUser(string email)
     {
-        var result = await _client.From<User>()
+        var result = await _client.From<PrimroseUser>()
             .Where(x => x.Email == email)
             .Get();
 

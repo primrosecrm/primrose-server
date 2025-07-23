@@ -5,14 +5,9 @@ using Primrose.Validators.Services;
 
 namespace Primrose.Validators.Filters;
 
-public class ValidationFilter : IActionFilter
+public class ValidationFilter(IValidatorService validator) : IActionFilter
 {
-    private readonly IValidatorService _validator;
-
-    public ValidationFilter(IValidatorService validator)
-    {
-        _validator = validator;
-    }
+    private readonly IValidatorService _validator = validator;
 
     public void OnActionExecuting(ActionExecutingContext context)
     {
@@ -20,7 +15,7 @@ public class ValidationFilter : IActionFilter
         {
             if (argument is null) continue;
 
-            var result = _validator.Validate(argument);
+            var result = _validator.Validate((ApiRequest)argument);
 
             if (result.Errors.Count is 0) continue;
             if (context.Controller is not ControllerBase) continue;

@@ -1,25 +1,21 @@
-using System.Security.Claims;
 using Primrose.API.Validators;
 using Primrose.Auth;
 using Primrose.Entities;
-using Primrose.Entities.DeactivateUser;
 using Primrose.Entities.LoginUser;
 using Primrose.Entities.RegisterUser;
-using Primrose.Repositories;
-using Primrose.Services.Authentication;
+using Primrose.Repositories.User;
 using Primrose.Services.Hashing;
 using Primrose.Services.Password;
 
-namespace Primrose.API.Services.Authentication;
+namespace Primrose.Services.Authentication;
 
-public class AuthenticationService(IUserRepository userRepository, IHashService hashService, IPasswordService passwordService, JwtProvider JwtProvider, IHttpContextAccessor httpContextAccessor)
-    : IAuthenticationService
+public class AuthService(IUserRepository userRepository, IHashService hashService, IPasswordService passwordService, ITokenProvider tokenProvider)
+    : IAuthService
 {
     private readonly IUserRepository _userRepository = userRepository;
     private readonly IHashService _hashService = hashService;
     private readonly IPasswordService _passwordService = passwordService;
-    private readonly JwtProvider _jwtProvider = JwtProvider;
-    private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
+    private readonly ITokenProvider _tokenProvider = tokenProvider;
 
     public async Task<LoginUserResponse> LoginUser(LoginUserRequest request)
     {
@@ -49,7 +45,7 @@ public class AuthenticationService(IUserRepository userRepository, IHashService 
         }
 
         response.IsAuthenticated = isAuthenticated;
-        response.JwtToken = response.IsAuthenticated ? _jwtProvider.Create(user) : null;
+        response.JwtToken = response.IsAuthenticated ? _tokenProvider.Create(user) : null;
 
         return response;
     }
@@ -75,32 +71,6 @@ public class AuthenticationService(IUserRepository userRepository, IHashService 
         var isCreated = await _userRepository.CreateUser(request.Email, request.Name, passwordHash);
 
         response.CreatedSuccessfully = isCreated;
-        return response;
-    }
-    
-    public async Task<DeactivateUserResponse> DeactivateUser(DeactivateUserRequest request)
-    {
-        var response = new DeactivateUserResponse();
-
-        var user = await _userRepository.GetUser(request.Email);
-        if (user is null)
-        {
-            return response.Err(ApiErrorCode.UserFromEmailDoesNotExist);
-        }
-
-        var jwtTokenEmail = _httpContextAccessor.HttpContext?.User?.Claims
-            .FirstOrDefault(c => c.Type is ClaimTypes.Email)?.Value;
-
-        if (jwtTokenEmail != user.Email)
-        {
-            return response.Err(ApiErrorCode.UserForbidden);
-        }
-
-        user.IsActive = false;
-
-        var isUpdated = await _userRepository.UpdateUser(user);
-
-        response.IsDeactivated = isUpdated;
         return response;
     }
 }

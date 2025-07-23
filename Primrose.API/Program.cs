@@ -6,8 +6,6 @@ using Primrose.Validators.Services;
 using Primrose.Services.Hashing;
 using Primrose.Services.Password;
 using Primrose.Entities.RegisterUser;
-using Primrose.API.Services.Authentication;
-
 using System.Threading.RateLimiting;
 using FluentValidation;
 using Supabase;
@@ -18,6 +16,8 @@ using Primrose.Auth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Primrose.Services.User;
+using Primrose.Repositories.User;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -83,19 +83,21 @@ builder.Services.AddScoped<IValidator<RegisterUserRequest>, RegisterRequestValid
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 // register services
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IUserService, UserService>();
+
 builder.Services.AddScoped<IHashService, BCryptHashService>();
-builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IPasswordService, PasswordService>();
 builder.Services.AddScoped<IPasswordPolicy, OwaspPasswordPolicy>();
 
 DotNetEnv.Env.Load();
 
 
-// set up jwt
+// set up jwt authentication
 var jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET") 
     ?? throw new Exception("JWT_SECRET was null");
 
-builder.Services.AddSingleton(new JwtProvider(jwtSecret));
+builder.Services.AddSingleton<ITokenProvider>(new JwtProvider(jwtSecret));
 
 builder.Services.AddAuthentication(options =>
 {
@@ -117,6 +119,7 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddHttpContextAccessor();
 
+
 // set up supabase
 var url = Environment.GetEnvironmentVariable("SUPABASE_URL") 
     ?? throw new Exception("SUPABASE_URL was null");
@@ -130,12 +133,10 @@ var options = new SupabaseOptions
     AutoConnectRealtime = true,
 };
 
-builder.Services.AddSingleton(provider => new Client(url, key, options));
+builder.Services.AddSingleton(
+    provider => new Client(url, key, options)
+);
 
-builder.Services.AddHttpsRedirection(options =>
-{
-    options.HttpsPort = 7050;
-});
 
 // build app
 var app = builder.Build();
@@ -154,4 +155,4 @@ app.UseRateLimiter();
 
 app.MapControllers();
 
-app.Run(); 
+app.Run();
