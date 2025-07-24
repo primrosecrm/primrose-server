@@ -16,6 +16,7 @@ public static class ApiErrorCodeMapper
             ApiErrorCode.InvalidNameFormat => "A user name must be at least three characters.",
             ApiErrorCode.EnumParseFailed => "Failed to parse error code as enum. This is likely an issue with one of the validators for this request.",
             ApiErrorCode.UserForbidden => "The user attempted to modify another users record. The email in the JWT did not match the email on the user being altered.",
+            ApiErrorCode.DataNotFound => "The data object associated with this request cannot be found.",
             _ => "Error code not handled in message mapper. Notify developer."
         };
 

@@ -1,4 +1,4 @@
-using Primrose.Models.Authentication;
+using Primrose.Models;
 
 namespace Primrose.Repositories.User;
 

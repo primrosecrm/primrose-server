@@ -18,6 +18,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Primrose.Services.User;
 using Primrose.Repositories.User;
+using Primrose.Services.Contact;
+using Primrose.Repositories.Contact;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -70,7 +72,9 @@ builder.Services.AddApiVersioning(options =>
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<ValidationFilter>();
-});
+})
+.AddNewtonsoftJson();
+
 
 // register validator service
 builder.Services.AddScoped<IValidatorService, FluentValidatorService>();
@@ -81,10 +85,12 @@ builder.Services.AddScoped<IValidator<RegisterUserRequest>, RegisterRequestValid
 
 // register repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IContactRepository, ContactRepository>();
 
 // register services
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IContactService, ContactService>();
 
 builder.Services.AddScoped<IHashService, BCryptHashService>();
 builder.Services.AddScoped<IPasswordService, PasswordService>();

@@ -43,4 +43,28 @@ public class UserService(IUserRepository userRepository, IHttpContextAccessor ht
         response.IsDeactivated = isUpdated;
         return response;
     }
+
+    public async Task<ActivateUserResponse> ActivateUser(ActivateUserRequest request)
+    {
+        var response = new ActivateUserResponse();
+
+        var user = await _userRepository.GetUser(request.Email);
+        if (user is null)
+        {
+            return response.Err(ApiErrorCode.UserFromEmailDoesNotExist);
+        }
+
+        var jwtTokenEmail = GetEmailFromJwt();
+        if (jwtTokenEmail != user.Email)
+        {
+            return response.Err(ApiErrorCode.UserForbidden);
+        }
+
+        user.IsActive = true;
+
+        var isUpdated = await _userRepository.UpdateUser(user);
+
+        response.IsActivated = isUpdated;
+        return response;
+    }
 }

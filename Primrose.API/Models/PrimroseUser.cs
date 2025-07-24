@@ -1,7 +1,7 @@
 using Supabase.Postgrest.Attributes;
 using Supabase.Postgrest.Models;
 
-namespace Primrose.Models.Authentication;
+namespace Primrose.Models;
 
 #pragma warning disable CS8618
 
